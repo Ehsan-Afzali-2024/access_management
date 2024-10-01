@@ -1,16 +1,28 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import "./globals.css";
+import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
+import { Roboto } from "next/font/google";
+import { ThemeProvider } from "@mui/material/styles";
+import InitColorSchemeScript from "@mui/material/InitColorSchemeScript";
+import theme from "./theme";
+//import "./globals.css";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
+// import localFont from "next/font/local";
+// const geistSans = localFont({
+//   src: "./fonts/GeistVF.woff",
+//   variable: "--font-geist-sans",
+//   weight: "100 900",
+// });
+// const geistMono = localFont({
+//   src: "./fonts/GeistMonoVF.woff",
+//   variable: "--font-geist-mono",
+//   weight: "100 900",
+// });
+
+const roboto = Roboto({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-roboto",
 });
 
 export const metadata: Metadata = {
@@ -24,9 +36,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        {children}
+    <html lang="en" suppressHydrationWarning>
+      <body className={roboto.variable}>
+        <AppRouterCacheProvider options={{ key: "mui" }}>
+          <ThemeProvider theme={theme}>
+            {/* must come before the <main> element */}
+            <InitColorSchemeScript attribute="class" />
+            <main>{children}</main>
+          </ThemeProvider>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );
